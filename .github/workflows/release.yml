@@ -20,7 +20,7 @@ jobs:
       - name: Extract version from addon.xml
         id: version
         run: |
-          VERSION=$(grep -oP '<addon\b[^>]*version="\K[^"]+' webinterface.plex/addon.xml)
+          VERSION=$(xmllint --xpath 'string(/addon/@version)' webinterface.plex/addon.xml)
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Addon version: $VERSION"
 
