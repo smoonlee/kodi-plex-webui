@@ -1,0 +1,94 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history for changelog & tag detection
+
+      - name: Extract version from addon.xml
+        id: version
+        run: |
+          VERSION=$(grep -oP 'version="\K[^"]+' webinterface.plex/addon.xml | head -1)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Addon version: $VERSION"
+
+      - name: Check if tag already exists
+        id: tag_check
+        run: |
+          TAG="v${{ steps.version.outputs.version }}"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Tag $TAG already exists — skipping release."
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "Tag $TAG does not exist — will create release."
+          fi
+
+      - name: Validate CHANGELOG.md
+        if: steps.tag_check.outputs.exists == 'false'
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+
+          # Check CHANGELOG.md exists
+          if [ ! -f CHANGELOG.md ]; then
+            echo "::error::CHANGELOG.md not found in repository root"
+            exit 1
+          fi
+
+          # Check for a heading matching the version (e.g. ## [1.8.0])
+          if ! grep -qE "^## \[${VERSION}\]" CHANGELOG.md; then
+            echo "::error::CHANGELOG.md has no entry for version ${VERSION}. Add a '## [${VERSION}]' section before pushing."
+            exit 1
+          fi
+
+          # Extract the section for this version and verify it has content
+          SECTION=$(sed -n "/^## \[${VERSION}\]/,/^## \[/p" CHANGELOG.md | sed '1d;$d' | sed '/^[[:space:]]*$/d')
+          if [ -z "$SECTION" ]; then
+            echo "::error::CHANGELOG.md entry for ${VERSION} is empty. Add release notes under '## [${VERSION}]'."
+            exit 1
+          fi
+
+          echo "Changelog validated for v${VERSION}"
+          echo "$SECTION"
+
+      - name: Extract release notes from CHANGELOG.md
+        if: steps.tag_check.outputs.exists == 'false'
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          # Extract everything between this version heading and the next version heading (or EOF)
+          sed -n "/^## \[${VERSION}\]/,/^## \[/{/^## \[${VERSION}\]/d;/^## \[/d;p}" CHANGELOG.md > release_notes.md
+          echo "Release notes for v${VERSION}:"
+          cat release_notes.md
+
+      - name: Build zip package
+        if: steps.tag_check.outputs.exists == 'false'
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          ZIP_NAME="webinterface.plex-v${VERSION}.zip"
+          mkdir -p dist
+          zip -r "dist/${ZIP_NAME}" webinterface.plex/ -x "*.DS_Store" "*__MACOSX*"
+          echo "Built: dist/${ZIP_NAME}"
+          ls -lh "dist/${ZIP_NAME}"
+
+      - name: Create tag and GitHub Release
+        if: steps.tag_check.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: v${{ steps.version.outputs.version }}
+          body_path: release_notes.md
+          files: dist/webinterface.plex-v${{ steps.version.outputs.version }}.zip
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.version, '-') }}

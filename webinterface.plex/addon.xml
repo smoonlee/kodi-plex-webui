@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon id="webinterface.plex"
+    name="Plex Web Interface"
+    version="1.8.0"
+    provider-name="KodiPlexUI">
+    <requires>
+        <import addon="xbmc.webinterface" version="1.0.0" />
+    </requires>
+    <extension point="xbmc.webinterface" entry="index.html" default="false" />
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <summary lang="en_GB">Plex-inspired web interface for Kodi</summary>
+        <summary lang="en_US">Plex-inspired web interface for Kodi</summary>
+        <description lang="en_GB">A modern, responsive web interface for Kodi that emulates the Plex
+            look and feel. Browse your movie and TV show library, control playback, and manage your
+            media — all from your browser.</description>
+        <description lang="en_US">A modern, responsive web interface for Kodi that emulates the Plex
+            look and feel. Browse your movie and TV show library, control playback, and manage your
+            media — all from your browser.</description>
+        <license>MIT</license>
+        <forum></forum>
+        <website></website>
+        <source></source>
+    </extension>
+</addon>

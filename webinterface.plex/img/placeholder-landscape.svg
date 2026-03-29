@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" width="320" height="180">
+    <rect width="320" height="180" rx="8" fill="#282828" />
+    <g transform="translate(160,75)">
+        <circle r="24" fill="none" stroke="#3f3f3f" stroke-width="2" />
+        <polygon points="-6,-10 -6,10 10,0" fill="#3f3f3f" />
+    </g>
+    <text x="160" y="130" text-anchor="middle" font-family="Inter, sans-serif" font-size="12"
+        fill="#666">No Thumbnail</text>
+</svg>
