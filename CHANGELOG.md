@@ -2,6 +2,73 @@
 
 All notable changes to the Plex Web Interface for Kodi will be documented in this file.
 
+## [1.8.0] - 2026-03-29
+
+### Added
+
+- **Search result sections** — search results grouped by Movies, TV Shows, and Music with section headers and item counts
+- **Watched/Unwatched filter** — dropdown on Movies and TV Shows libraries to filter by All / Unwatched / Watched
+- **Shuffle & Repeat controls** — toggle buttons in the player bar reflecting Kodi's shuffle/repeat state (off → all → one)
+- **Queue / Up Next panel** — slide-out panel showing the current playback queue with click-to-jump and remove functionality
+- **Library refresh buttons** — refresh icon in Movies, TV Shows, and Music library headers to re-fetch data in place
+- `Player.SetShuffle` and `Player.SetRepeat` API methods added to kodi-api.js
+- i18n strings for all new features across all 5 languages (en, de, fr, es, nl)
+
+## [1.7.0] - 2026-03-29
+
+### Added
+
+- **Continue Watching** — hub row on the home view showing in-progress movies and episodes with resume progress bars, sorted by last played
+- **Empty library states** — friendly empty-state messages with icons for Movies, TV Shows, and Music when libraries have no content
+- **Sort persistence** — sort method and direction saved to localStorage and restored on revisit
+- **Library item counts** — total counts displayed in library headers (e.g. "Movies (42)")
+- **Genre filter chips** — filterable genre chip bar on Movies and TV Shows libraries
+- **Context-aware back navigation** — detail view back button uses browser history instead of always returning to library
+- `getInProgressMovies` and `getInProgressEpisodes` API methods for Continue Watching
+
+## [1.6.0] - 2026-03-29
+
+### Added
+
+- **Skip-to-content link** for keyboard/screen reader users
+- **Clickable hub titles** — hub row titles link to their respective library views
+- **Sort direction toggle** — ascending/descending toggle buttons on all library sort controls
+- Focus-visible styles on nav links, buttons, sort selects, and topbar buttons
+
+### Fixed
+
+- Arrow key shortcuts now gated behind `state.activePlayerId !== null` — prevents hijacking page scroll when nothing is playing
+- Contrast bumped: `--color-text-secondary` to `#b3b3b3`, `--color-text-muted` to `#999999` (WCAG AA)
+- Focus management on view navigation — heading receives focus for keyboard/remote users
+- Scroll buttons baseline `opacity: 0.3` so they're always visible
+- Toast notifications have `role="status"` and `aria-live="polite"` for screen readers
+- Settings panel focus trap with `trapSettingsFocus()` — Tab/Shift+Tab cycles within panel
+- `.btn-secondary` duplicate style fixed — settings scoped via `.settings-body .btn-secondary`
+
+### Changed
+
+- Progress bar thickness increased to 6px (was 4px)
+- Volume slider track 6px with 14px thumb for easier interaction
+
+## [1.5.0] - 2026-03-29
+
+### Fixed
+
+- `escapeAttr()` null guard — returns empty string for null/undefined input
+- `--card-min-width` CSS variable mismatch corrected
+- Trailer popover event listener leak — outside-click handler now properly cleaned up
+- Zero-rating suppression — ratings of `0` no longer display misleadingly
+- Client-side sort uses localeCompare-safe comparison
+- Staleness guard on home view — skips re-fetch if loaded within 30 seconds
+- Replaced inline `onclick` handlers with proper `addEventListener` calls
+- `aria-current="page"` set on active nav link
+- Volume slider has `aria-label="Volume"`
+
+### Removed
+
+- Dead/unused API methods cleaned from kodi-api.js
+- Unused i18n public API exports removed
+
 ## [1.4.2] - 2026-03-29
 
 ### Added
