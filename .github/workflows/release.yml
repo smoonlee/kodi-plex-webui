@@ -20,7 +20,7 @@ jobs:
       - name: Extract version from addon.xml
         id: version
         run: |
-          VERSION=$(grep -oE '<addon[^>]*version="[^\"]*"' webinterface.plex/addon.xml | sed -n 's/.*version="\([^"]*\)".*/\1/p' | head -n 1)
+          VERSION=$(xmllint --xpath 'string(/addon/@version)' webinterface.plex/addon.xml)
           if [ -z "$VERSION" ]; then
             echo "::error::Failed to extract version from webinterface.plex/addon.xml"
             exit 1
