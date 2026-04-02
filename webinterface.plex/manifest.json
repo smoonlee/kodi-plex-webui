@@ -1,0 +1,10 @@
+{
+  "name": "Plex for Kodi",
+  "short_name": "Kodi Plex",
+  "description": "A modern, Plex-inspired web interface for Kodi",
+  "start_url": "index.html#home",
+  "display": "standalone",
+  "background_color": "#141414",
+  "theme_color": "#141414",
+  "icons": []
+}

@@ -1,149 +1,131 @@
-# Plex Web Interface for Kodi (OSMC)
+# Kodi Plex Web UI
 
-A modern, responsive web interface addon for Kodi that emulates the Plex look and feel. Browse your movie, TV show, and music library from any browser on your network.
+A modern, Plex-inspired web interface for [Kodi](https://kodi.tv). Browse your movies, TV shows, and music library with a dark-themed UI featuring sidebar navigation, full transport controls, and responsive design.
 
-![Kodi](https://img.shields.io/badge/Kodi-19%2B-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![License](https://img.shields.io/github/license/smoonlee/kodi-plex-webui)
+![Release](https://img.shields.io/github/v/release/smoonlee/kodi-plex-webui)
 
 ## Features
 
-- **Plex-inspired dark theme** with gold accent colors
-- **Home hub** with recently added movies, TV shows, and music
-- **Full library browsing** — movies, TV shows (with seasons/episodes), music albums
-- **Playback controls** — play, pause, stop, next, previous, seek, volume
-- **Now playing bar** with real-time progress updates
-- **Search** across your entire library
-- **Sorting** by title, year, rating, or date added
-- **Detail views** with plot, cast, ratings, and artwork (fanart/posters)
-- **Responsive design** — works on desktop, tablet, and mobile
-- **Zero dependencies** — pure vanilla HTML/CSS/JS, no build step
+- **Plex-style dark theme** — clean, modern interface inspired by the Plex media player
+- **Home dashboard** — recently added movies, episodes, and albums at a glance
+- **Featured hero carousel** — top home movies with premium slide transitions, refined controls, and quick play/details actions
+- **Movie browser** — poster grid, detail view with cast, one-click play
+- **TV Show browser** — drill down from shows → seasons → episodes
+- **Music browser** — artist grid → album view
+- **Search** — real-time debounced search across your entire library
+- **Now Playing bar** — transport controls, seek slider, volume with mute
+- **Toast notifications** — visual feedback for playback and library actions
+- **Keyboard shortcuts** — Space (play/pause), M (mute), ← → (seek), Enter (activate)
+- **Responsive** — works on desktop, tablet, and mobile with sidebar overlay
+- **Accessible** — ARIA landmarks, focus-visible outlines, screen-reader labels
+- **Zero dependencies** — pure HTML, CSS, and vanilla JavaScript
 
-## Prerequisites
+## Screenshots
 
-1. **Kodi 19 (Matrix)** or later running on OSMC (or any Kodi install)
-2. **Web server enabled** in Kodi:
-   - Go to `Settings → Services → Control`
-   - Enable **"Allow remote control via HTTP"**
-   - Note the **port** (default: `8080`)
-   - Optionally set a username/password
+> _Screenshots coming soon._
+
+## Compatibility
+
+| Kodi Version | Status      |
+| ------------ | ----------- |
+| 21 (Omega)   | ✅ Tested   |
+| 20 (Nexus)   | ✅ Expected |
+| 19 (Matrix)  | ⚠️ Untested |
+
+Requires **HTTP control** enabled in Kodi. No authentication is needed when accessing from the same network. If Kodi is configured with a username/password, your browser will prompt for credentials automatically.
 
 ## Installation
 
-### Option 1: Install from zip (recommended)
+### From GitHub Release
 
-1. **Build the zip package:**
+1. Download the latest `webinterface.plex-vX.X.X.zip` from [Releases](https://github.com/smoonlee/kodi-plex-webui/releases)
+2. In Kodi, go to **Settings → System → Add-ons → Install from zip file**
+3. Select the downloaded zip
+4. Go to **Settings → Services → Control** and:
+   - Enable **Allow remote control via HTTP**
+   - Set **Web interface** to **Plex Web Interface**
+5. Open `http://<kodi-ip>:8080` in your browser
 
-   **Windows (PowerShell):**
+### Manual Install
 
-   ```powershell
-   .\build.ps1
-   ```
+1. Clone or download this repository
+2. Copy the `webinterface.plex` folder to your Kodi addons directory:
+   - **Linux**: `~/.kodi/addons/`
+   - **Windows**: `%APPDATA%\Kodi\addons\`
+   - **macOS**: `~/Library/Application Support/Kodi/addons/`
+3. Restart Kodi and enable the addon
 
-   **Linux/macOS:**
+## Configuration
 
-   ```bash
-   bash build.sh
-   ```
+The web interface works out of the box with no configuration. Kodi must have the following settings enabled:
 
-   This creates `dist/webinterface.plex.zip`.
+- **Settings → Services → Control → Allow remote control via HTTP**: On
+- **Port**: Default `8080` (configurable in Kodi)
+- **Web interface**: Select **Plex Web Interface** from the dropdown
 
-2. **Copy the zip to your OSMC device:**
+### Troubleshooting
 
-   ```bash
-   scp dist/webinterface.plex.zip osmc@<device-ip>:~/
-   ```
+| Problem                         | Solution                                                   |
+| ------------------------------- | ---------------------------------------------------------- |
+| Blank page / connection refused | Verify HTTP control is enabled and the port is correct     |
+| No library content              | Ensure media sources are added and library is scanned      |
+| Images not loading              | Check that Kodi's web server is accessible on your network |
+| Playback won't start            | Confirm "Allow remote control via HTTP" is enabled         |
 
-3. **Install in Kodi:**
-   - `Settings → Add-ons → Install from zip file`
-   - Navigate to and select `webinterface.plex.zip`
+## Development
 
-4. **Activate the web interface:**
-   - `Settings → Services → Control → Web interface`
-   - Select **"Plex Web Interface"**
+### Prerequisites
 
-### Option 2: Manual install
+- A running Kodi instance with **HTTP control enabled** (Settings → Services → Control)
+- PowerShell (for the build script)
 
-Copy the `webinterface.plex` folder directly into the Kodi addons directory:
+### Build
 
-```bash
-# OSMC (Raspberry Pi)
-scp -r webinterface.plex osmc@<device-ip>:~/.kodi/addons/
-
-# Linux
-cp -r webinterface.plex ~/.kodi/addons/
-
-# Windows
-# Copy to %APPDATA%\Kodi\addons\
-
-# macOS
-# Copy to ~/Library/Application Support/Kodi/addons/
+```powershell
+.\build.ps1
 ```
 
-Then activate it in `Settings → Services → Control → Web interface`.
+This creates a `dist/webinterface.plex-vX.X.X.zip` ready for installation.
 
-## Usage
+### Project Structure
 
-Once installed and activated, open your browser and navigate to:
-
-```
-http://<kodi-ip>:8080
-```
-
-Replace `<kodi-ip>` with your Kodi/OSMC device's IP address and `8080` with your configured port.
-
-## Project Structure
-
-```
+```text
 webinterface.plex/
-├── addon.xml              # Kodi addon metadata
-├── icon.png               # Addon icon
-├── index.html             # Main entry point
+├── addon.xml          # Kodi addon metadata
+├── index.html         # Entry point (ARIA landmarks, toast container)
 ├── css/
-│   └── style.css          # Plex-inspired theme
-├── js/
-│   ├── kodi-api.js        # Kodi JSON-RPC API client
-│   └── app.js             # Application logic & UI
-└── img/
-    ├── logo.svg           # Navigation logo
-    ├── placeholder-poster.svg
-    └── placeholder-landscape.svg
+│   └── style.css      # Plex-inspired dark theme
+└── js/
+    ├── kodi.js        # Kodi JSON-RPC API wrapper
+    └── app.js         # Main application logic (SPA routing, views, transport)
 ```
+
+### Architecture
+
+The app follows an **IIFE module pattern** with two modules:
+
+- **`Kodi`** (`kodi.js`) — Low-level JSON-RPC wrapper. Exposes methods for Player, VideoLibrary, AudioLibrary, Application, Input, and System namespaces. All calls go through `sendRequest()` which handles the JSON-RPC envelope and error checking.
+- **`App`** (`app.js`) — SPA shell with client-side routing via `navigate()`. Each view (home, movies, tvshows, music, search, settings) is an async function that fetches data and renders HTML. A `navGeneration` counter prevents stale responses from overwriting the current view. Polling is visibility-aware (paused when the browser tab is hidden).
+
+### Keyboard Shortcuts
+
+| Key   | Action                |
+| ----- | --------------------- |
+| Space | Play / Pause          |
+| M     | Toggle mute           |
+| ←     | Seek back 5%          |
+| →     | Seek forward 5%       |
+| Enter | Activate focused card |
 
 ## How It Works
 
-The web interface communicates with Kodi's built-in **JSON-RPC API** over HTTP. When served as a web interface addon, both the HTML files and the API share the same origin, so no CORS configuration is needed.
+The interface communicates with Kodi via its [JSON-RPC API](https://kodi.wiki/view/JSON-RPC_API) over HTTP. All library browsing, playback control, and search functionality uses standard Kodi RPC methods — no plugins or server-side code required. Images are proxied through Kodi's built-in `/image/` endpoint.
 
-Key API methods used:
+## Contributing
 
-- `VideoLibrary.GetMovies` / `GetTVShows` / `GetRecentlyAdded*`
-- `AudioLibrary.GetAlbums` / `GetRecentlyAddedAlbums`
-- `Player.Open` / `PlayPause` / `Stop` / `Seek`
-- `Application.SetVolume`
-
-## Customization
-
-Edit `css/style.css` to adjust the theme. Key CSS variables at the top of the file control colors, spacing, and typography:
-
-```css
-:root {
-  --color-accent: #e5a00d; /* Plex gold — change for a different accent */
-  --color-bg-primary: #1f1f1f; /* Main background */
-  --color-bg-nav: #1a1a1a; /* Navigation bar */
-  --card-width: 170px; /* Poster card width */
-}
-```
-
-## Roadmap / Next Steps
-
-- [x] Full album detail view with track listing
-- [x] Playlist support
-- [x] Genre filtering and tag browsing
-- [x] Keyboard shortcuts
-- [x] Image/photo library support
-- [x] Addon settings page
-- [x] WebSocket support for real-time updates
-- [x] Mobile responsive design
-- [x] Multi-language support
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
-MIT
+[MIT](LICENSE)
